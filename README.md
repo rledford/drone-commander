@@ -1,3 +1,18 @@
+**Game Name:** Drone Commander
+
+**Game Link:** <a href='#'>coming soon using **Surge**</a>
+
+**Team Members:** <a href='https://www.freecodecamp.com/rledford'>@rledford</a>
+
+**Game Description:** Mobile friendly, touch/click and drag to control a drone using a smooth follow mechanic. Your drone shoots at all times ( infinite ammo  **✓** ) . See how far you can go by trying to dodge and shoot oncoming enemy drones and other obstacles to stay alive ( endless  **✓** ). Collect stuff to make your drone faster and shoot more projectiles in different directions ( upgrades **✓** ). Scrolling foreground / background visuals ( parallax effects **✓** ). Explosions everywhere ( particles **✓** ). Vector graphics drawn only with the canvas API ( retro **✓** ).
+
+**Technologies Used**
+React
+Bootstrap
+
+**Notes**
+This is my first attempt at a game for using React and JavaScript. I've made a lot of games in the past but this will be my first web-based one. I'm doing everything from scratch for the actual game code. Implementing my own classes for common things like 2D vectors, shape drawing, collision detection with either SAT, rect overlaps, points in radius, or a combination of them. Not trying to get too complicated with the first project but I'm aiming pretty high.
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
