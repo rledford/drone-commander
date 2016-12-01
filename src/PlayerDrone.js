@@ -5,7 +5,21 @@ import { Drone } from './Drone'
 
 export class PlayerDrone extends Drone {
 
-    move(dt){
+    constructor (world) {
+        super();
+        this.world = world;
+    }
+
+    update (dt) {
+        super.update(dt);
+        //check world for collisions
+        if (!this.world) return;
+    }
+
+    handleEnemyCollisions(enemyGroup){
+    }
+
+    move (dt) {
         let v2d = Point.Sub(this.destination, this.position),//vector to destination
         dist = v2d.mag(),//distance to destination
         vMag = 0;//will assign the velocity.magnitude after acceleration is added
@@ -34,7 +48,7 @@ export class PlayerDrone extends Drone {
         }
     }
 
-    shoot(){
+    shoot () {
         let bullet = new Bullet();
         bullet.shape = Shape.FromPoints([
             new Point(0,0),

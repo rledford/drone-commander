@@ -36,7 +36,7 @@ export class DroneCommander extends Component{
         this.handleTouchLeave = this.handleTouchLeave.bind(this);
         this.handleTouchEnter = this.handleTouchEnter.bind(this);
 
-        //generic object to store game objects
+        //generic object to store game objects for testing
         this.objects = {
             player: null,
             enemies: []
@@ -51,7 +51,7 @@ export class DroneCommander extends Component{
             new Point(20,0),
             new Point(10,-5),
         ];
-        drone.shape = Shape.FromPoints(ship).normalize();
+        drone.shape = Shape.FromPoints(ship).normalize()
         drone.setPosition({
             x: this.state.screen.width * 0.5,
             y: 50

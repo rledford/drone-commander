@@ -5,9 +5,10 @@ import { Shape } from './Shape';
 export class GameObject {
 
     constructor () {
+        this.id = GameObject.nextID();
         this.shape = new Shape();
         this.position = new Point();
-        this.visible = false;
+        this.visible = true;
         this.alive = true;
         this.color = '#fff';
     }
@@ -19,6 +20,7 @@ export class GameObject {
 
     draw (ctx) {
         ///ctx is context
+        if (!this.visible) return;
         if (this.shape.points.length >= 2){
             let x = 0, y = 0, point = this.shape.points[0];
             ctx.beginPath();
@@ -41,5 +43,12 @@ export class GameObject {
             ctx.arc(this.position.x, this.position.y, 5, 0, Math.PI*2, true);
             ctx.stroke();
         }
+    }
+
+    static nextID () {
+        if (!GameObject.lastID){
+            GameObject.lastID = 0;
+        }
+        return GameObject.lastID++;
     }
 }
