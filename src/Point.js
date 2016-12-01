@@ -1,15 +1,19 @@
 
 export class Point {
-    constructor (x, y) {
+    constructor (x=0, y=0) {
         this.x = x;
         this.y = y;
     }
 
-    set (x, y) {
+    set (point) {
         //set this points coordinates to the values - returns this for chaining
-        this.x = x;
-        this.y = y;
+        this.x = point.x;
+        this.y = point.y;
         return this;
+    }
+
+    clone () {
+        return new Point(this.x, this.y);
     }
 
     mag () {
@@ -60,6 +64,14 @@ export class Point {
 
     equal (point) {
         return this.x === point.x && this.y === point.y;
+    }
+
+    toString () {
+        return 'Point ('+this.x+', '+this.y+')';
+    }
+
+    static Zero () {
+        return new Point(0,0);
     }
 
     static Add (p1, p2) {

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './Game.css'
 import { Point } from './Point'
-import { Drone } from './Drone';
+import { Shape } from './Shape'
+import { PlayerDrone } from './PlayerDrone';
 
 function GamePanel(props){
     return (
@@ -42,21 +43,15 @@ export class DroneCommander extends Component{
         }
     }
 
-    initGameObjects () {
-        let drone = new Drone();
+    initTestGameObjects () {
+        let drone = new PlayerDrone();
         let ship = [
             new Point(0,0),
             new Point(10,-20),
             new Point(20,0),
             new Point(10,-5),
         ];
-        let rect = [
-            new Point(0,0),
-            new Point(0,-20),
-            new Point(20,-20),
-            new Point(20, 0)
-        ];
-        drone.setShape(ship);
+        drone.shape = Shape.FromPoints(ship).normalize();
         drone.setPosition({
             x: this.state.screen.width * 0.5,
             y: 50
@@ -80,7 +75,7 @@ export class DroneCommander extends Component{
         requestAnimationFrame( () => { this.update() } );
 
         //init objects for testing
-        this.initGameObjects();
+        this.initTestGameObjects();
         this.lastTick = Date.now();
     }
 
@@ -129,6 +124,12 @@ export class DroneCommander extends Component{
     update(){
         //game logic
         let timepassed = (Date.now() - this.lastTick) * 0.001;//scale milliseconds to seconds
+        if (timepassed > 0.333){
+            //skip this frame since there has probably been an issue with the browser / rendering / something else
+            this.lastTick = Date.now();
+            requestAnimationFrame( () => { this.update() } );//next frame
+            return;
+        }
         let player = this.objects.player;
         let state = this.state;
         const touch = this.touchPos;
@@ -161,6 +162,10 @@ export class DroneCommander extends Component{
         if (player !== null){
             player.draw(context);
         }
+
+        this.objects.enemies.forEach( (enemy) => {
+            enemy.draw(context);
+        });
     }
 
     render(){
