@@ -3,6 +3,7 @@ import './Game.css'
 import { Point } from './Point'
 import { Shape } from './Shape'
 import { PlayerDrone } from './PlayerDrone';
+import { ShapeHelper } from './ShapeHelper';
 
 function GamePanel(props){
     return (
@@ -51,7 +52,7 @@ export class DroneCommander extends Component{
             new Point(20,0),
             new Point(10,-5),
         ];
-        drone.shape = Shape.FromPoints(ship).normalize()
+        drone.shape = Shape.FromPoints(ship, true);
         drone.setPosition({
             x: this.state.screen.width * 0.5,
             y: 50

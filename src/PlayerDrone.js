@@ -16,9 +16,6 @@ export class PlayerDrone extends Drone {
         if (!this.world) return;
     }
 
-    handleEnemyCollisions(enemyGroup){
-    }
-
     move (dt) {
         let v2d = Point.Sub(this.destination, this.position),//vector to destination
         dist = v2d.mag(),//distance to destination
@@ -55,7 +52,7 @@ export class PlayerDrone extends Drone {
             new Point(0,5),
             new Point(2,5),
             new Point(2,0)
-        ]).normalize();
+        ], true);
         bullet.position.set(this.position);
         bullet.speed -= this.velocity.y;
         bullet.velocity.set({

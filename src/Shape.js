@@ -9,7 +9,7 @@ export class Shape{
         this._scale = 1.0;//should not be changed without setScale
     }
 
-    setScale (scale) {
+    scaleTo (scale) {
         //scale is relative to original size so that setting it to 1 will make the shape
         //the same size as it was when it was finalized
         this.points.forEach( (point) => {
@@ -22,7 +22,7 @@ export class Shape{
         return this;
     }
 
-    normalize () {
+    zeroize () {
         //moves this Shapes points so that its geometric center is at (0, 0)
         //returns 'this' for chaining
         this.points.forEach( (point) => {
@@ -40,7 +40,7 @@ export class Shape{
     finalize () {
         //responsible for calculating the centroid and range of this Shape
         //should be called immediately after setting / changing points
-        //if not called before scale, normalize, etc the results will be unpredictable
+        //if not called before scale, zeroize, etc the results will be unpredictable
         //returns 'this' for chaining
         let dist2 = 0, range2 = 0;
 
@@ -65,7 +65,7 @@ export class Shape{
         return this;
     }
 
-    static FromPoints (points) {
+    static FromPoints (points, zeroize = false) {
         //returns a finalized Shape with the given points
         if (points.length < 2){
             throw 'FromPoints requires 2 or more Points - Try using Shape.Circle(radius)';
@@ -77,7 +77,7 @@ export class Shape{
         });
         shape.finalize();
 
-        return shape;
+        return zeroize ? shape.zeroize() : shape;
     }
 
     static Circle (radius = 1) {
@@ -92,7 +92,7 @@ export class Shape{
             new Point(0, 0),
             new Point(width * 0.5, height),
             new Point(width, 0)
-        ]).finalize().normalize();
+        ], true);
     }
 
     static Rectangle (width = 1, height = 1){
@@ -101,6 +101,6 @@ export class Shape{
             new Point(0, height),
             new Point(width, height),
             new Point(width, 0)
-        ]).finalize().normalize();
+        ], true);
     }
 }
