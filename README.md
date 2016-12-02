@@ -1,8 +1,7 @@
-**Game Name:** Drone Commander
-
-**Game Link:** <a href='#'>coming soon using **Surge**</a>
-
-**Team Members:** <a href='https://www.freecodecamp.com/rledford'>@rledford</a>
+**Game Name:** Drone Commander  
+**Game Link:** <a href='#'>coming soon using **Surge**</a>  
+**Team Members:** <a href='https://www.freecodecamp.com/rledford'>@rledford</a>  
+**Project Plan:** <a href='https://github.com/rledford/drone-commander/wiki'>GitHub Wiki</a>
 
 **Game Description:** Mobile friendly, touch/click and drag to control a drone using a smooth follow mechanic. Your drone shoots at all times ( infinite ammo  **✓** ) . See how far you can go by trying to dodge and shoot oncoming enemy drones and other obstacles to stay alive ( endless  **✓** ). Collect stuff to make your drone faster and shoot more projectiles in different directions ( upgrades **✓** ). Scrolling foreground / background visuals ( parallax effects **✓** ). Explosions everywhere ( particles **✓** ). Vector graphics drawn only with the canvas API ( retro **✓** ).
 
