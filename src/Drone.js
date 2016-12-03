@@ -1,7 +1,5 @@
 import { GameObject } from './GameObject';
 import { Point } from './Point';
-import { Shape } from './Shape';
-import { Bullet } from './Bullet';
 
 export class Drone extends GameObject {
 
@@ -68,6 +66,5 @@ export class Drone extends GameObject {
         ctx.strokeStyle = '#f00';
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, 5, 0, Math.PI*2,true);
-        ctx.stroke();
-    }
+        ctx.stroke();    }
 }

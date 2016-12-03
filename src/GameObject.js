@@ -5,7 +5,10 @@ import { Shape } from './Shape';
 export class GameObject {
 
     constructor () {
-        this.id = GameObject.nextID();
+        this.id = GameObject.nextID();//used by GameWorld for object management
+        this.category = 'none';//used by GameWorld for object management
+        this.group = 'none';//used by GameWorld for object management
+        this.world = null;//should be set by a GameWorld when GameWorld.addObject(this) is used
         this.shape = new Shape();
         this.position = new Point();
         this.visible = true;
@@ -22,11 +25,13 @@ export class GameObject {
         ///ctx is context
         if (!this.visible) return;
         if (this.shape.points.length >= 2){
-            let x = 0, y = 0, point = this.shape.points[0];
-            ctx.beginPath();
+            let point = this.shape.points[0],
+                x = this.position.x + point.x,
+                y = this.position.y + point.y;
             ctx.fillStyle = this.color;
-            x = this.position.x + point.x;
-            y = this.position.y + point.y;
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
             ctx.moveTo(x, y);
             for (let i = 1; i < this.shape.points.length; i++){
                 point = this.shape.points[i];
@@ -36,12 +41,15 @@ export class GameObject {
             }
             ctx.closePath();
             ctx.fill();
+            ctx.stroke();
         }
         else if (this.shape.points.length === 1){
-            ctx.strokeStyle = '#fff';
+            ctx.strokeStyle = this.color;
+            ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.position.x, this.position.y, 5, 0, Math.PI*2, true);
             ctx.stroke();
+            ctx.fill();
         }
     }
 

@@ -68,7 +68,7 @@ export class Shape{
     static FromPoints (points, zeroize = false) {
         //returns a finalized Shape with the given points
         if (points.length < 2){
-            throw 'FromPoints requires 2 or more Points - Try using Shape.Circle(radius)';
+            throw new Error('FromPoints requires 2 or more Points - Try using Shape.Circle(radius)');
         }
         let shape = new Shape();
         //shallow copy points into the points array of the new Shape

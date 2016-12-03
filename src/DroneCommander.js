@@ -4,13 +4,7 @@ import { Point } from './Point'
 import { Shape } from './Shape'
 import { PlayerDrone } from './PlayerDrone';
 import { ShapeHelper } from './ShapeHelper';
-
-function GamePanel(props){
-    return (
-        <div>
-        </div>
-    );
-}
+import { GameWorld } from './GameWorld';
 
 export class DroneCommander extends Component{
 
@@ -21,7 +15,8 @@ export class DroneCommander extends Component{
             screen: {
                 //NOTE: to get inner window size {window.innerWidth, window.innerHeight}
                 width: 400,
-                height: parseInt(400*1.25, 10)
+                height: 600,
+                ratio: window.devicePixelRatio
             },
             context: null//canvas 2d context
         }
@@ -37,40 +32,39 @@ export class DroneCommander extends Component{
         this.handleTouchLeave = this.handleTouchLeave.bind(this);
         this.handleTouchEnter = this.handleTouchEnter.bind(this);
 
-        //generic object to store game objects for testing
-        this.objects = {
-            player: null,
-            enemies: []
-        }
+        this.world = null;
+        this.player = null;
     }
 
     initTestGameObjects () {
-        let drone = new PlayerDrone();
+        this.world = new GameWorld();
+        this.player = new PlayerDrone();
         let ship = [
             new Point(0,0),
             new Point(10,-20),
             new Point(20,0),
             new Point(10,-5),
         ];
-        drone.shape = Shape.FromPoints(ship, true);
-        drone.setPosition({
+        this.player.shape = Shape.FromPoints(ship, true);
+        this.player.setPosition({
             x: this.state.screen.width * 0.5,
             y: 50
         });
 
-        this.objects.player = drone;
+        this.world.addObject(this.player);
     }
 
     componentDidMount(){
+        //need to listen to mouseup / touch up event globally
+        //so if the canvas was being touched, then the touch leaves, and is released
+        //it can be handled appropriately
+        window.addEventListener('mouseup', this.handleTouchUp);
+
         //get reference to canvas 2d context
         const context = document.getElementById('GameView').getContext('2d');
         this.setState({
             context: context
         });
-        //need to listen to mouseup / touch up event globally
-        //so if the canvas was being touched, then the touch leaves, and is released
-        //it can be handled appropriately
-        window.addEventListener('mouseup', this.handleTouchUp);
 
         //wire up the game loop
         requestAnimationFrame( () => { this.update() } );
@@ -131,27 +125,23 @@ export class DroneCommander extends Component{
             requestAnimationFrame( () => { this.update() } );//next frame
             return;
         }
-        let player = this.objects.player;
-        let state = this.state;
         const touch = this.touchPos;
         const context = this.state.context;
 
-        if (player){
+        if (this.player){
             if (touch !== null && this.isTouched){
-                player.setDestination(touch);
+                this.player.setDestination(touch);
             }
-            player.update(timepassed);
         }
+
+        this.world.update(timepassed);
 
         this.draw();
         this.lastTick = Date.now();
         requestAnimationFrame( () => { this.update() } );//next frame
-
     }
 
     draw(){
-        let player = this.objects.player;
-
         const context = this.state.context;
         const screen = this.state.screen;
         context.fillStyle = '#000';
@@ -160,13 +150,7 @@ export class DroneCommander extends Component{
 
 
         //TEST GAME OBJECTS
-        if (player !== null){
-            player.draw(context);
-        }
-
-        this.objects.enemies.forEach( (enemy) => {
-            enemy.draw(context);
-        });
+        this.world.draw(context);
     }
 
     render(){

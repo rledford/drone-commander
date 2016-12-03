@@ -1,5 +1,5 @@
 import { Point } from './Point';
-import { Shape } from './Shape';
+//import { Shape } from './Shape';
 
 //some of the functions have been translated from the C++ source provided at
 //http://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
@@ -45,6 +45,7 @@ export class ShapeHelper{
     }
 
     //the following functions assume that the arguments are of type GameObject
+    //or have the same property structure and names
     static ObjectsRiskIntersect (a, b){
         let dist2 = Point.Distance2(a.poition, b.position);
         let range2 = Math.pow(a.shape.range + b.shape.range, 2);
