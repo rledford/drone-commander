@@ -47,21 +47,30 @@ export class GameWorld {
 
     update (dt) {
         for (let drone in this.player.drones){
-            this.player.drones[drone].update(dt);
+            this[player][drones][drone].update(dt);
         }
         for (let bullet in this.player.bullets){
-            this.player.bullets[bullet].update(dt);
+            this[player][bullets][bullet].update(dt);
         }
     }
 
     draw (context) {
         for (let drone in this.player.drones){
-            this.player.drones[drone].draw(context);
+            this[player][drones][drone].draw(context);
         }
         for (let bullet in this.player.bullets){
-            this.player.bullets[bullet].draw(context);
+            this[player][bullets][bullet].draw(context);
         }
     }
+
+    handleCollision (objA, objB){
+        if (objA.category === objB.category){
+            return;
+        }
+    }
+    handlePlayerCollideEnemy (player, enemy){
+    }
+
     //for the functions below
     //'object' and 'group' are tested for collisions with the provided 'func'
     //if a collision is detected the 'callback' is called with the

@@ -18,7 +18,8 @@ export class DroneCommander extends Component{
                 height: 600,
                 ratio: window.devicePixelRatio
             },
-            context: null//canvas 2d context
+            context: null,//canvas 2d context
+            inputType: 'none'
         }
         this.touchPos = null;//will be {x: int, y: int} when the canvas is touched/clicked
         this.isTouched = false;
@@ -59,9 +60,13 @@ export class DroneCommander extends Component{
         //so if the canvas was being touched, then the touch leaves, and is released
         //it can be handled appropriately
         window.addEventListener('mouseup', this.handleTouchUp);
+        window.addEventListener('touchend', this.handleTouchUp);
+        window.addEventListener('touchcancel', this.handleTouchUp);
 
         //get reference to canvas 2d context
-        const context = document.getElementById('GameView').getContext('2d');
+        const canvas = document.getElementById('GameView');
+        const context = canvas.getContext('2d');
+
         this.setState({
             context: context
         });
@@ -82,17 +87,20 @@ export class DroneCommander extends Component{
     handleTouchDown(event){
         this.isTouched = true;
         this.touchPos = this.unprojectTouch(event);
+        event.preventDefault();//prevent window from scrolling
         console.log('touch down');
     }
 
     handleTouchUp(event){
         this.isTouched = false;
         this.touchPos = null;
+        event.preventDefault();
         console.log('touch up');
     }
 
     handleTouchMove(event){
         this.touchPos = this.unprojectTouch(event);
+        event.preventDefault();
     }
 
     handleTouchLeave(event){
@@ -110,6 +118,17 @@ export class DroneCommander extends Component{
     unprojectTouch(event){
         //unprojects the x,y coordinates in the touch event to
         //their position within the canvas
+        if (event.type.indexOf('touch') !== -1){
+            console.log('touch');
+            let info = "touch: " + event.touches[0].toString();
+
+            this.setState({inputType: info});
+            return {
+                x: event.touches[0].clientX - event.target.offsetLeft + window.pageXOffset,
+                y: event.touches[0].clientY - event.target.offsetTop + window.pageYOffset
+            }
+        }
+        this.setState({inputType: 'mouse'});
         return {
             x: event.nativeEvent.clientX - event.target.offsetLeft + window.pageXOffset,
             y: event.nativeEvent.clientY - event.target.offsetTop + window.pageYOffset
@@ -157,13 +176,17 @@ export class DroneCommander extends Component{
         //need ot implement ui panel
         return (
             <div style={{textAlign: 'center'}}>
+                <div>INPUT: {this.state.inputType}</div>
                 <canvas id='GameView'
                     width={this.state.screen.width}
                     height={this.state.screen.height}
+
                     onMouseDown={this.handleTouchDown}
                     onMouseMove={this.handleTouchMove}
                     onMouseLeave={this.handleTouchLeave}
                     onMouseEnter={this.handleTouchEnter}
+                    onTouchStart={this.handleTouchDown}
+                    onTouchMove={this.handleTouchMove}
                 />
             </div>
         );
