@@ -1,74 +1,95 @@
-import * as con from './constants';
-
-//define locals for convenience and code clarity
-let player = con.CAT_PLAYER,
-    enemy = con.CAT_ENEMY,
-    environment = con.CAT_ENV,
-    drones = con.GRP_DRONES,
-    bullets = con.GRP_BULLETS,
-    dangers = con.GRP_DANGERS,
-    powerups = con.GRP_PWRUPS;
-
 
 export class GameWorld {
 
     //world manages categories that contain groups of objects in Dictionaries where keys are GameObject.id
     constructor () {
-        //category
-        this[player] = {
+        this.player = {
             //groups
-            [drones]: {},
-            [bullets]: {}
+            drones: [],
+            bullets: []
         }
         //category
-        this[enemy] = {
+        this.enemy = {
             //groups
-            [drones]: {},
-            [bullets]: {}
+            drones: [],
+            bullets: []
         }
         //category
-        this[environment] = {
+        this.env = {
             //groups
-            [dangers]: {},
-            [powerups]: {}
+            dangers: [],
+            powerups: []
         }
-        //particles do not need to be refereced by ID since they will be strictly managed by the world once they have been create
         this.particles = [];
     }
 
-    addObject (object) {
-        this[object.category][object.group][object.id] = object;
-        object.world = this;
-    }
-
-    removeObject (object) {
-        delete this[object.category][object.group][object.id];
-    }
-
     update (dt) {
-        for (let drone in this.player.drones){
-            this[player][drones][drone].update(dt);
+        let i, obj;
+        for (i = this.env.dangers.length - 1; i >= 0; i--){
+            obj = this.env.dangers[i];
+            if (!obj.alive){
+                this.env.dangers.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
         }
-        for (let bullet in this.player.bullets){
-            this[player][bullets][bullet].update(dt);
+        for (i = this.env.powerups.length - 1; i >= 0; i--){
+            obj = this.env.powerups[i];
+            if (!obj.alive){
+                this.env.powerups.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
+        }
+
+        for (i = this.player.bullets.length - 1; i >= 0; i--){
+            obj = this.player.bullets[i];
+            if (!obj.alive){
+                this.player.bullets.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
+        }
+        for (i = this.enemy.bullets.length - 1; i >= 0; i--){
+            obj = this.enemy.bullets[i];
+            if (!obj.alive){
+                this.enemy.bulltes.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
+        }
+
+        for (i = this.player.drones.length - 1; i >= 0; i--){
+            obj = this.player.drones[i];
+            if (!obj.alive){
+                this.player.drones.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
+        }
+        for (i = this.enemy.drones.length - 1; i >= 0; i--){
+            obj = this.enemy.drones[i];
+            if (!this.enemy.drones[i].alive){
+                this.enemy.drones.splice(i, 1);
+                continue;
+            }
+            obj.update(dt);
         }
     }
 
     draw (context) {
-        for (let drone in this.player.drones){
-            this[player][drones][drone].draw(context);
-        }
-        for (let bullet in this.player.bullets){
-            this[player][bullets][bullet].draw(context);
-        }
-    }
-
-    handleCollision (objA, objB){
-        if (objA.category === objB.category){
-            return;
-        }
-    }
-    handlePlayerCollideEnemy (player, enemy){
+        this.enemy.drones.forEach( (obj) => {
+            obj.draw(context);
+        });
+        this.enemy.bullets.forEach( (obj) => {
+            obj.draw(context);
+        });
+        this.player.drones.forEach( (obj) => {
+            obj.draw(context);
+        });
+        this.player.bullets.forEach( (obj) => {
+            obj.draw(context);
+        });
     }
 
     //for the functions below

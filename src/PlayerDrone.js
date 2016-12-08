@@ -2,14 +2,12 @@ import { Point } from './Point';
 import { Bullet } from './Bullet';
 import { Shape } from './Shape';
 import { Drone } from './Drone';
-import * as con from './constants';
 
 export class PlayerDrone extends Drone {
 
-    constructor () {
+    constructor (world) {
         super();
-        this.category = con.CAT_PLAYER;
-        this.group = con.GRP_DRONES;
+        this.world = world;
     }
 
     update (dt) {
@@ -48,7 +46,7 @@ export class PlayerDrone extends Drone {
     }
 
     shoot () {
-        let bullet = new Bullet();
+        let bullet = new Bullet(this.world);
         bullet.shape = Shape.FromPoints([
             new Point(0,0),
             new Point(0,5),
@@ -61,8 +59,6 @@ export class PlayerDrone extends Drone {
             x: 0,
             y: -1
         });
-        bullet.category = con.CAT_PLAYER;
-        bullet.group = con.GRP_BULLETS;
-        this.world.addObject(bullet);
+        this.world.player.bullets.push(bullet);
     }
 }

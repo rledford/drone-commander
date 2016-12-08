@@ -6,8 +6,6 @@ export class GameObject {
 
     constructor () {
         this.id = GameObject.nextID();//used by GameWorld for object management
-        this.category = 'none';//used by GameWorld for object management
-        this.group = 'none';//used by GameWorld for object management
         this.world = null;//should be set by a GameWorld when GameWorld.addObject(this) is used
         this.shape = new Shape();
         this.position = new Point();

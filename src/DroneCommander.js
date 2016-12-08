@@ -39,7 +39,8 @@ export class DroneCommander extends Component{
 
     initTestGameObjects () {
         this.world = new GameWorld();
-        this.player = new PlayerDrone();
+        this.player = new PlayerDrone(this.world);
+        let enemy = new PlayerDrone(this.world);
         let ship = [
             new Point(0,0),
             new Point(10,-20),
@@ -47,12 +48,17 @@ export class DroneCommander extends Component{
             new Point(10,-5),
         ];
         this.player.shape = Shape.FromPoints(ship, true);
+        enemy.shape = Shape.FromPoints(ship, true);
         this.player.setPosition({
+            x: this.state.screen.width * 0.5,
+            y: this.state.screen.height - 25
+        });
+        enemy.setPosition({
             x: this.state.screen.width * 0.5,
             y: 50
         });
-
-        this.world.addObject(this.player);
+        this.world.player.drones.push(this.player);
+        this.world.enemy.drones.push(enemy);
     }
 
     componentDidMount(){

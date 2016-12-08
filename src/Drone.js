@@ -9,13 +9,12 @@ export class Drone extends GameObject {
         this.velocity = new Point(0, 0);
         this.destination = new Point(0, 0);
 
-        this.bullets = [];
         this.lastFired = 0;
         this.fireRate = 0.1;
     }
 
     setDestination (pos) {
-        if (Point.Distance(this.position, pos) > this.velocity.mag()){
+        if (Point.Distance2(this.position, pos) > this.velocity.mag2()){
             this.destination.set(pos);
         }
     }
@@ -48,23 +47,14 @@ export class Drone extends GameObject {
             this.lastFired -= this.fireRate;
             this.shoot();
         }
-        for (let i = this.bullets.length-1; i > -1; i--){
-            bullet = this.bullets[i];
-            bullet.update(dt);
-            if (bullet.position.y < -10){
-                this.bullets.splice(i, 1);
-            }
-        }
     }
 
     draw (ctx) {
         super.draw(ctx);
-        this.bullets.forEach( (bullet) => {
-            bullet.draw(ctx);
-        });
         //DEBUG RENDERING
         ctx.strokeStyle = '#f00';
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, 5, 0, Math.PI*2,true);
-        ctx.stroke();    }
+        ctx.stroke();
+    }
 }
