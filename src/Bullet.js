@@ -3,9 +3,8 @@ import { Point } from './Point';
 
 export class Bullet extends GameObject {
 
-    constructor (world) {
+    constructor () {
         super();
-        this.world  = world;
         this.color = '#fff';
         this.speed = 500;//px / sec
         this.velocity = new Point(0, 0);

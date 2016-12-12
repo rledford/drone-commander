@@ -8,15 +8,14 @@ export class Drone extends GameObject {
         this.speed = 500;//px / sec
         this.velocity = new Point(0, 0);
         this.destination = new Point(0, 0);
+        this.bulletGroup = null;
 
         this.lastFired = 0;
-        this.fireRate = 0.1;
+        this.fireRate = 1.0;
     }
 
     setDestination (pos) {
-        if (Point.Distance2(this.position, pos) > this.velocity.mag2()){
-            this.destination.set(pos);
-        }
+        this.destination.set(pos);
     }
 
     setPosition (pos){
@@ -38,7 +37,6 @@ export class Drone extends GameObject {
     }
 
     update (dt) {
-        let bullet;
         //dt is delta time since last frame
         this.move(dt);
         this.lastFired += dt;

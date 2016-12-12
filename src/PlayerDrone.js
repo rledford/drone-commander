@@ -5,18 +5,25 @@ import { Drone } from './Drone';
 
 export class PlayerDrone extends Drone {
 
-    constructor (world) {
+    constructor () {
         super();
-        this.world = world;
+        this.speed = 500;
+        this.velocity = new Point();
+        this.destination = new Point();
+        this.bulletGroup = null;
+
+        this.lastFired = 0;
+        this.fireRate = 0.25;
     }
 
-    update (dt) {
-        super.update(dt);
-        //check world for collisions
-        if (!this.world) return;
+    setDestination (pos) {
+        if (Point.Distance2(this.position, pos) > this.velocity.mag2()){
+            this.destination.set(pos);
+        }
     }
 
     move (dt) {
+        //move is called in the base Drone classes update method
         let v2d = Point.Sub(this.destination, this.position),//vector to destination
         dist = v2d.mag(),//distance to destination
         vMag = 0;//will assign the velocity.magnitude after acceleration is added
@@ -46,12 +53,12 @@ export class PlayerDrone extends Drone {
     }
 
     shoot () {
-        let bullet = new Bullet(this.world);
+        if (!this.bulletGroup) return;
+        let bullet = new Bullet();
         bullet.shape = Shape.FromPoints([
             new Point(0,0),
-            new Point(0,5),
-            new Point(2,5),
-            new Point(2,0)
+            new Point(0,10)
+
         ], true);
         bullet.position.set(this.position);
         bullet.speed -= this.velocity.y;
@@ -59,6 +66,6 @@ export class PlayerDrone extends Drone {
             x: 0,
             y: -1
         });
-        this.world.player.bullets.push(bullet);
+        this.bulletGroup.push(bullet);
     }
 }

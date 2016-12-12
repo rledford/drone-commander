@@ -47,14 +47,31 @@ export class ShapeHelper{
     //the following functions assume that the arguments are of type GameObject
     //or have the same property structure and names
     static ObjectsRiskIntersect (a, b){
-        let dist2 = Point.Distance2(a.poition, b.position);
+        let dist2 = Point.Distance2(a.position, b.position);
         let range2 = Math.pow(a.shape.range + b.shape.range, 2);
 
-        return range2 < dist2;
+        return dist2 <= range2;
     }
 
     static ObjectsIntersect (a, b){
-
+        let p1 = new Point();
+        let q1 = new Point();
+        let p2 = new Point();
+        let q2 = new Point();
+        for (let i = 1; i < a.shape.points.length; i++){
+            p1.set(a.position).add(a.shape.points[i-1]);
+            q1.set(a.position).add(a.shape.points[i]);
+            for (let j = 1; j < b.shape.points.length; j++){
+                p2.set(b.position).add(b.shape.points[j-1]);
+                q2.set(b.position).add(b.shape.points[j]);
+                if (ShapeHelper.DoIntersect(
+                    p1, q1,
+                    p2, q2
+                )){
+                        return true;
+                }
+            }
+        }
+        return false;
     }
-
 }

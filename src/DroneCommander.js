@@ -3,9 +3,10 @@ import './Game.css'
 import { Point } from './Point'
 import { Shape } from './Shape'
 import { PlayerDrone } from './PlayerDrone';
+import { EnemyDrone } from './EnemyDrone';
 import { ShapeHelper } from './ShapeHelper';
 import { GameWorld } from './GameWorld';
-
+import * as EnemySpawn from './EnemySpawn';
 export class DroneCommander extends Component{
 
     constructor(props){
@@ -35,12 +36,18 @@ export class DroneCommander extends Component{
 
         this.world = null;
         this.player = null;
+        this.spawn = null;
     }
 
     initTestGameObjects () {
         this.world = new GameWorld();
-        this.player = new PlayerDrone(this.world);
-        let enemy = new PlayerDrone(this.world);
+        this.player = new PlayerDrone();
+        this.spawn = new EnemySpawn.EnemySpawnCenter(this.world);
+        this.spawn.position.set({
+            x: this.state.screen.width * 0.5,
+            y: -25
+        });
+        this.spawn.startSpawn(10);
         let ship = [
             new Point(0,0),
             new Point(10,-20),
@@ -48,17 +55,55 @@ export class DroneCommander extends Component{
             new Point(10,-5),
         ];
         this.player.shape = Shape.FromPoints(ship, true);
-        enemy.shape = Shape.FromPoints(ship, true);
+        this.player.bulletGroup = this.world.player.bullets;
         this.player.setPosition({
-            x: this.state.screen.width * 0.5,
+            x: this.state.screen.width * 0.10,
             y: this.state.screen.height - 25
         });
-        enemy.setPosition({
-            x: this.state.screen.width * 0.5,
-            y: 50
-        });
         this.world.player.drones.push(this.player);
-        this.world.enemy.drones.push(enemy);
+    }
+
+    checkIntersect(objA, objB){
+        if (!objA.alive || !objB.alive) return false;
+        if (ShapeHelper.ObjectsRiskIntersect(objA, objB)){
+            return ShapeHelper.ObjectsIntersect(objA, objB);
+        }
+        return false;
+    }
+
+    handleCollisions () {
+        this.world.player.drones.forEach( (player) => {
+            this.world.enemy.drones.forEach( (enemy) => {
+                //check if enemy is offscreen as early as possible
+                if (enemy.position.y > this.state.screen.height + enemy.shape.range){
+                    console.log('enemy off screen');
+                    enemy.alive = false;
+                }
+                if (this.checkIntersect(player, enemy)){
+                    enemy.alive = false;
+                    player.alive = false;
+                }
+            });
+            this.world.enemy.bullets.forEach( (bullet) => {
+                if (this.checkIntersect(player, bullet)){
+                    player.alive = false;
+                    bullet.alive = false;
+                }
+            });
+        });
+        this.world.player.bullets.forEach( (bullet) => {
+            this.world.enemy.drones.forEach( (enemy) => {
+                if (this.checkIntersect(bullet, enemy)){
+                    enemy.alive = false;
+                    bullet.alive = false;
+                }
+            });
+            this.world.env.powerups.forEach( (up) => {
+                if (this.checkIntersect(bullet, up)){
+                    console.log('powerup');
+                }
+            });
+        });
     }
 
     componentDidMount(){
@@ -159,7 +204,10 @@ export class DroneCommander extends Component{
             }
         }
 
+        this.spawn.update(timepassed);
+
         this.world.update(timepassed);
+        this.handleCollisions();
 
         this.draw();
         this.lastTick = Date.now();

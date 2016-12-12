@@ -1,4 +1,4 @@
-
+import { ShapeHelper } from './ShapeHelper';
 export class GameWorld {
 
     //world manages categories that contain groups of objects in Dictionaries where keys are GameObject.id
@@ -53,7 +53,7 @@ export class GameWorld {
         for (i = this.enemy.bullets.length - 1; i >= 0; i--){
             obj = this.enemy.bullets[i];
             if (!obj.alive){
-                this.enemy.bulltes.splice(i, 1);
+                this.enemy.bullets.splice(i, 1);
                 continue;
             }
             obj.update(dt);
@@ -90,29 +90,5 @@ export class GameWorld {
         this.player.bullets.forEach( (obj) => {
             obj.draw(context);
         });
-    }
-
-    //for the functions below
-    //'object' and 'group' are tested for collisions with the provided 'func'
-    //if a collision is detected the 'callback' is called with the
-    //colliding object(s) as an argument
-    getFirstCollision (object, group, func, callback){
-        for (let i = 0; i < group.length; i++){
-            if (func(object, group[i])){
-                return callback(group[i]);
-            }
-        }
-    }
-
-    getAllCollisions (object, group, func, callback){
-        let all = [];
-        for (let i = 0; i < group.length; i++){
-            if (func(object, group[i])){
-                all.push(group[i]);
-            }
-        }
-        if (all.length > 0){
-            callback(all);
-        }
     }
 }

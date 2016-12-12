@@ -14,6 +14,12 @@ export class GameObject {
         this.color = '#fff';
     }
 
+    set (args) {
+        for (let k in Object.keys(args)){
+            this[k] = args[k];
+        }
+    }
+
     update (dt) {
         //dt should be the time passed in seconds
 
