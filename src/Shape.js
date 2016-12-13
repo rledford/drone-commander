@@ -9,6 +9,19 @@ export class Shape{
         this._scale = 1.0;//should not be changed without setScale
     }
 
+    clone () {
+        let shape = new Shape();
+        this.points.forEach( (pt) => {
+            shape.points.push(pt.clone());
+        });
+        shape.centroid = this.centroid.clone();
+        shape.radius = this.radius;
+        shape.range = this.range;
+        shape._scale = this.scale;
+
+        return shape;
+    }
+
     scaleTo (scale) {
         //scale is relative to original size so that setting it to 1 will make the shape
         //the same size as it was when it was finalized

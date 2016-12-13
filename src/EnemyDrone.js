@@ -14,8 +14,15 @@ export class EnemyDrone extends Drone{
 
     set (params) {
         Object.keys(params).forEach( (key) => {
+            if (key === 'velocity' || key === 'position' || key === 'shape'){
+                this[key] = params[key].clone();
+                return;
+            }
+            if (key === 'moveFunction'){
+                this.moveFunction = params.moveFunction(params.moveAmp, params.moveFreq);
+                return;
+            }
             this[key] = params[key];
-            console.log(key);
         });
     }
 
