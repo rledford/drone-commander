@@ -26,12 +26,13 @@ export class EnemySpawn{
 export class EnemySpawnCenter extends EnemySpawn {
     constructor (world) {
         super(world);
-        this.enemyShipShape = [
+        this.enemyShape = EnemyDrone.SHAPES[0];
+        /*this.enemyShipShape = [
             new Point(0,0),
             new Point(-10,10),
             new Point(0,15),
             new Point(10,10)
-        ];
+        ];*/
         //define movement parameters
         this.enemyParams.push(
             () => {
@@ -41,10 +42,10 @@ export class EnemySpawnCenter extends EnemySpawn {
                     speed: 75,
                     velocity: new Point(0,1),
                     color: Helper.randInGroup(['#f00', '#0f0', '#00f']),
-                    shape: Shape.FromPoints(this.enemyShipShape, true),
+                    shape: this.enemyShape,
                     moveAmp: Helper.randInGroup([-1, 1]),
                     moveFreq: Helper.randInGroup([1,2,3,4]),
-                    moveFunction: EnemyDrone.MoveSin
+                    moveFunction: EnemyDrone.MoveSine
                 }
             }
         );
@@ -55,7 +56,7 @@ export class EnemySpawnCenter extends EnemySpawn {
                     speed: 75,
                     velocity: new Point(0,1),
                     color: '#f00',
-                    shape: Shape.FromPoints(this.enemyShipShape, true),
+                    shape: this.enemyShape,
                     moveFunction: null
                 }
             }
@@ -67,9 +68,10 @@ export class EnemySpawnCenter extends EnemySpawn {
                     speed: Helper.randIntInRange(50,50),
                     velocity: new Point(0,1),
                     color: '#f00',
-                    shape: Shape.FromPoints(this.enemyShipShape, true),
-                    moveFunction: EnemyDrone.MoveCircle(
-                        2.5, Math.random() > 0.5 ? 1 : -1)
+                    shape: this.enemyShape,
+                    moveAmp: 2.5,
+                    moveFreq: Math.random() > 0.5 ? 1 : -1,
+                    moveFunction: EnemyDrone.MoveCircle
                 }
             }
         );
@@ -80,7 +82,7 @@ export class EnemySpawnCenter extends EnemySpawn {
         this.spawnTimer = 0;
         this.spawning = true;
         this.spawnRate = Helper.randInRange(this.minSpawnTime, this.maxSpawnTime);
-        this.currentParams = this.enemyParams[0]();
+        this.currentParams = this.enemyParams[Helper.randIntInRange(0,this.enemyParams.length-1)]();
     }
 
     makeEnemy () {
