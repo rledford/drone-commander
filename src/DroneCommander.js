@@ -6,6 +6,7 @@ import { PlayerDrone } from './PlayerDrone';
 import { EnemyDrone } from './EnemyDrone';
 import { ShapeHelper } from './ShapeHelper';
 import { GameWorld } from './GameWorld';
+import { GameObject } from './GameObject';
 import * as EnemySpawn from './EnemySpawn';
 export class DroneCommander extends Component{
 
@@ -15,8 +16,8 @@ export class DroneCommander extends Component{
             traveled: 0,//distance traveled km - score
             screen: {
                 //NOTE: to get inner window size {window.innerWidth, window.innerHeight}
-                width: 400,
-                height: 600,
+                width: 480,
+                height: 640,
                 ratio: window.devicePixelRatio
             },
             context: null,//canvas 2d context
@@ -48,13 +49,20 @@ export class DroneCommander extends Component{
             y: -25
         });
         this.spawn.startSpawn(10);
+        for (let i = 0; i < 10; i++){
+          let obj = new GameObject();
+          obj.shape = Shape.Rectangle(20,20);
+          obj.color = '#b928c2';
+          obj.position = new Point(i*20,20);
+          this.world.env.powerups.push(obj);
+        }
         let ship = [
             new Point(0,0),
             new Point(10,-20),
             new Point(20,0),
             new Point(10,-5),
         ];
-        this.player.shape = Shape.FromPoints(ship, true);
+        //this.player.shape = Shape.FromPoints(ship, true);
         this.player.bulletGroup = this.world.player.bullets;
         this.player.setPosition({
             x: this.state.screen.width * 0.10,
@@ -100,7 +108,10 @@ export class DroneCommander extends Component{
             });
             this.world.env.powerups.forEach( (up) => {
                 if (this.checkIntersect(bullet, up)){
-                    console.log('powerup');
+                  bullet.alive = false;
+                  up.alive = false;
+                  this.player.applyPowerup();
+                  console.log('powerup');
                 }
             });
         });
@@ -230,7 +241,6 @@ export class DroneCommander extends Component{
         //need ot implement ui panel
         return (
             <div style={{textAlign: 'center'}}>
-                <div>INPUT: {this.state.inputType}</div>
                 <canvas id='GameView'
                     width={this.state.screen.width}
                     height={this.state.screen.height}

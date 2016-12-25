@@ -2,6 +2,7 @@ import { Point } from './Point';
 import { Bullet } from './Bullet';
 import { Shape } from './Shape';
 import { Drone } from './Drone';
+import * as Gun from './Gun';
 
 export class PlayerDrone extends Drone {
 
@@ -11,15 +12,40 @@ export class PlayerDrone extends Drone {
         this.velocity = new Point();
         this.destination = new Point();
         this.bulletGroup = null;
+        this.shape = PlayerDrone.SHAPE.clone();
+        //currentPowerLevel is the index reference in guns[]
+        this.currentPowerLevel = 0;
+        //the player collects powerups and will gain a powerLevel when nextPaowerLevel is 0
+        this.nextPowerLevel = 1;
+        this.guns = [
+          new Gun.PlayerGunLevel_1(this),
+          new Gun.PlayerGunLevel_2(this),
+          new Gun.PlayerGunLevel_3(this)
+        ];
+    }
 
-        this.lastFired = 0;
-        this.fireRate = 0.25;
+    update (dt) {
+      this.move(dt);
+      for (let i = 0; i <= this.currentPowerLevel; i++){
+        this.guns[i].update(dt);
+      }
     }
 
     setDestination (pos) {
         if (Point.Distance2(this.position, pos) > this.velocity.mag2()){
             this.destination.set(pos);
         }
+    }
+
+    applyPowerup () {
+      this.nextPowerLevel--;
+      if  (this.nextPowerLevel === 0){
+        console.log('POWER LEVEL GAINED');
+        this.currentPowerLevel = Math.min(this.currentPowerLevel+1, this.guns.length-1);
+        //next power level should be incremental
+        //if power level is maxed then there should be a screen wipe or something
+        this.nextPowerLevel = Math.min(this.currentPowerLevel + 1, this.guns.length);
+      }
     }
 
     move (dt) {
@@ -54,18 +80,20 @@ export class PlayerDrone extends Drone {
 
     shoot () {
         if (!this.bulletGroup) return;
-        let bullet = new Bullet();
-        bullet.shape = Shape.FromPoints([
-            new Point(0,0),
-            new Point(0,10)
-
-        ], true);
-        bullet.position.set(this.position);
-        bullet.speed -= this.velocity.y;
-        bullet.velocity.set({
-            x: 0,
-            y: -1
-        });
-        this.bulletGroup.push(bullet);
+        for (let i = 0; i <= this.currentPowerLevel; i++){
+          this.guns[i].shoot(this.position, this.bulletGroup);
+        }
+        //this.guns[this.currentPowerLevel].shoot(this.position, this.bulletGroup);
     }
 }
+
+PlayerDrone.SHAPE = Shape.FromPoints([
+  new Point(0,0),
+  new Point(0,-5),
+  new Point(5,-11),
+  new Point(11,-23),
+  new Point(17,-11),
+  new Point(23,-5),
+  new Point(23,0),
+  new Point(11,-5)
+], true);

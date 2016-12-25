@@ -78,6 +78,20 @@ export class Shape{
         return this;
     }
 
+    static RotateShape (shape, degrees) {
+      let angle = Math.PI/180 * degrees;
+      let s = Math.sin(angle);
+      let c = Math.cos(angle);
+      shape.points.forEach( (point) => {
+        point.sub(shape.centroid);
+        point.set({
+          x: point.x * c - point.y * s,
+          y: point.x * s + point.y * c
+        });
+        point.add(shape.centroid);
+      });
+    }
+
     static FromPoints (points, zeroize = false) {
         //returns a finalized Shape with the given points
         if (points.length < 2){
@@ -111,9 +125,9 @@ export class Shape{
     static Rectangle (width = 1, height = 1){
         return new Shape.FromPoints([
             new Point(0, 0),
-            new Point(0, height),
-            new Point(width, height),
-            new Point(width, 0)
+            new Point(0, height-1),
+            new Point(width-1, height-1),
+            new Point(width-1, 0)
         ], true);
     }
 }

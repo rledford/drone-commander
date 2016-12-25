@@ -90,5 +90,8 @@ export class GameWorld {
         this.player.bullets.forEach( (obj) => {
             obj.draw(context);
         });
+        this.env.powerups.forEach( (obj) => {
+          obj.draw(context);
+        })
     }
 }

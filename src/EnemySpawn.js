@@ -27,13 +27,7 @@ export class EnemySpawnCenter extends EnemySpawn {
     constructor (world) {
         super(world);
         this.enemyShape = EnemyDrone.SHAPES[0];
-        /*this.enemyShipShape = [
-            new Point(0,0),
-            new Point(-10,10),
-            new Point(0,15),
-            new Point(10,10)
-        ];*/
-        //define movement parameters
+
         this.enemyParams.push(
             () => {
                 console.log('getting new params');

@@ -66,6 +66,16 @@ export class Point {
         return this.x === point.x && this.y === point.y;
     }
 
+    rotate (origin, degrees) {
+      let angle = Math.PI/180 * degrees;
+      let s = Math.sin(angle);
+      let c = Math.cos(angle);
+      this.sub(origin);
+      this.x = this.x * c - this.y * s;
+      this.y = this.x * s + this.y * c;
+      this.add(origin);
+    }
+
     toString () {
         return 'Point ('+this.x+', '+this.y+')';
     }
@@ -91,18 +101,28 @@ export class Point {
         return p1.equal(p2);
     }
 
-    static Rotate (p, origin) {
-        //origin should be a point or object with x and y properties
-        //rotates the point (in place) around the origin
-        //returns the point for chaining
-        return new Point(0, 0);
-    }
-
     static Distance(p1, p2){
         return Point.Sub(p1, p2).mag();
     }
 
     static Distance2(p1, p2){
         return Point.Sub(p1, p2).mag2();
+    }
+
+    static FromAngleDegrees (degrees) {
+      let radians = Math.PI/180 * degrees;
+      return new Point(Math.cos(radians), Math.sin(radians));
+    }
+
+    static FromAngleRadians (radians) {
+      return new Point(Math.cos(radians), Math.sin(radians));
+    }
+
+    static ToAngleDegrees (point) {
+      return Math.PI/180 * Math.atan2(point.y, point.x);
+    }
+
+    static ToAngleRadians (point) {
+      return Math.atan2(point.y, point.x);
     }
 }

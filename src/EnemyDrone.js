@@ -10,7 +10,6 @@ export class EnemyDrone extends Drone{
         this.fireRate = 0.5;
         this.path = [];
         this.lifetime = 0;
-        //this.moveFunction = EnemyDrone.MoveTest(.5, 4);
     }
 
     set (params) {
@@ -97,12 +96,65 @@ export class EnemyDrone extends Drone{
 //static property list of Shapes for enemies
 EnemyDrone.SHAPES = [
   Shape.FromPoints([
-    new Point(49,99),
-    new Point(30,79),
-    new Point(36,60),
-    new Point(36,80),
-    new Point(62,80),
-    new Point(62,60),
-    new Point(68,79)
+    new Point(0,0),
+    new Point(0,-6),
+    new Point(6,-12),
+    new Point(6,-18),
+    new Point(12,-24),
+    new Point(18,-18),
+    new Point(18,-12),
+    new Point(24,-6),
+    new Point(24,0),
+    new Point(18,-6),
+    new Point(6,-6)
+  ], true),
+  Shape.FromPoints([
+    new Point(11,0),
+    new Point(0,-17),
+    new Point(0,-23),
+    new Point(5,-23),
+    new Point(5,-17),
+    new Point(11,-11),
+    new Point(17,-17),
+    new Point(17,-23),
+    new Point(23,-23),
+    new Point(23,-17),
+  ], true),
+  //wide round point
+  Shape.FromPoints([
+    new Point(11,0),
+    new Point(0,-11),
+    new Point(0,-17),
+    new Point(5,-23),
+    new Point(17,-23),
+    new Point(23,-17),
+    new Point(23,-11)
+  ], true),
+  //pointy
+  Shape.FromPoints([
+    new Point(11,0),
+    new Point(5,-11),
+    new Point(0,-17),
+    new Point(0,-23),
+    new Point(11,-17),
+    new Point(23,-23),
+    new Point(23,-17),
+    new Point(17,-11),
+  ], true),
+  //thin rounded point
+  Shape.FromPoints([
+    new Point(5,0),
+    new Point(0,-11),
+    new Point(0,-17),
+    new Point(5,-23),
+    new Point(11,-17),
+    new Point(11,-11)
+  ], true),
+  //thin pointy
+  Shape.FromPoints([
+    new Point(5,0),
+    new Point(0,-23),
+    new Point(5,-17),
+    new Point(11,-23)
   ], true)
 ];

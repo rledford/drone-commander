@@ -9,9 +9,6 @@ export class Drone extends GameObject {
         this.velocity = new Point(0, 0);
         this.destination = new Point(0, 0);
         this.bulletGroup = null;
-
-        this.lastFired = 0;
-        this.fireRate = 1.0;
     }
 
     setDestination (pos) {
@@ -32,19 +29,9 @@ export class Drone extends GameObject {
         });
     }
 
-    shoot(){
-        //override in extended class
-    }
-
     update (dt) {
         //dt is delta time since last frame
         this.move(dt);
-        this.lastFired += dt;
-        //update weapons and stuff
-        if (this.lastFired >= this.fireRate){
-            this.lastFired -= this.fireRate;
-            this.shoot();
-        }
     }
 
     draw (ctx) {
