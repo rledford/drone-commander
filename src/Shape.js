@@ -17,7 +17,7 @@ export class Shape{
         shape.centroid = this.centroid.clone();
         shape.radius = this.radius;
         shape.range = this.range;
-        shape._scale = this.scale;
+        shape._scale = this._scale;
 
         return shape;
     }
@@ -26,10 +26,11 @@ export class Shape{
         //scale is relative to original size so that setting it to 1 will make the shape
         //the same size as it was when it was finalized
         this.points.forEach( (point) => {
-            point.set(
-                Point.Sub(point, this.centroid)
-                .scale(scale/this._scale)
-            );
+          //point.scale(scale/this._scale);
+          point.set(
+              Point.Sub(point, this.centroid)
+              .scale(scale/this._scale)
+          );
         });
         this._scale = scale;
         return this;

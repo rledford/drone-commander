@@ -2,6 +2,7 @@ import { Point } from './Point';
 import { Bullet } from './Bullet';
 import { Shape } from './Shape';
 import { Drone } from './Drone';
+import { Shield } from './Shield';
 import * as Gun from './Gun';
 
 export class PlayerDrone extends Drone {
@@ -13,15 +14,18 @@ export class PlayerDrone extends Drone {
         this.destination = new Point();
         this.bulletGroup = null;
         this.shape = PlayerDrone.SHAPE.clone();
+        this.shields = [];
         //currentPowerLevel is the index reference in guns[]
-        this.currentPowerLevel = 0;
+        this.currentPowerLevel = 3;
         //the player collects powerups and will gain a powerLevel when nextPaowerLevel is 0
         this.nextPowerLevel = 1;
         this.guns = [
           new Gun.PlayerGunLevel_1(this),
           new Gun.PlayerGunLevel_2(this),
-          new Gun.PlayerGunLevel_3(this)
+          new Gun.PlayerGunLevel_3(this),
+          new Gun.PlayerGunLevel_4(this)
         ];
+        this.maxShields = 3;
     }
 
     update (dt) {
@@ -29,6 +33,9 @@ export class PlayerDrone extends Drone {
       for (let i = 0; i <= this.currentPowerLevel; i++){
         this.guns[i].update(dt);
       }
+      this.shields.forEach( (shield) => {
+        shield.update(dt);
+      });
     }
 
     setDestination (pos) {
@@ -46,6 +53,14 @@ export class PlayerDrone extends Drone {
         //if power level is maxed then there should be a screen wipe or something
         this.nextPowerLevel = Math.min(this.currentPowerLevel + 1, this.guns.length);
       }
+    }
+
+    applyShield () {
+      if (this.shields.length === this.maxShields) return;
+      let shield = new Shield(this);
+      shield.lineWidth = 2;
+      shield.shape.scaleTo(1+(this.shields.length + 1)*0.1);
+      this.shields.push(shield);
     }
 
     move (dt) {
@@ -84,6 +99,22 @@ export class PlayerDrone extends Drone {
           this.guns[i].shoot(this.position, this.bulletGroup);
         }
         //this.guns[this.currentPowerLevel].shoot(this.position, this.bulletGroup);
+    }
+
+    draw (ctx) {
+      this.shields.forEach( (shield) => {
+        shield.draw(ctx);
+      });
+      super.draw(ctx);
+    }
+
+    takeDamage () {
+      if (this.shields.length > 0) {
+        //pop the last element in the array
+        this.shields.splice(this.shields.length-1, 1);
+      } else {
+        this.alive = false;
+      }
     }
 }
 

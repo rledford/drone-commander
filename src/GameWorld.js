@@ -18,7 +18,7 @@ export class GameWorld {
         this.env = {
             //groups
             dangers: [],
-            powerups: []
+            collectables: []
         }
         this.particles = [];
     }
@@ -33,10 +33,10 @@ export class GameWorld {
             }
             obj.update(dt);
         }
-        for (i = this.env.powerups.length - 1; i >= 0; i--){
-            obj = this.env.powerups[i];
+        for (i = this.env.collectables.length - 1; i >= 0; i--){
+            obj = this.env.collectables[i];
             if (!obj.alive){
-                this.env.powerups.splice(i, 1);
+                this.env.collectables.splice(i, 1);
                 continue;
             }
             obj.update(dt);
@@ -90,7 +90,7 @@ export class GameWorld {
         this.player.bullets.forEach( (obj) => {
             obj.draw(context);
         });
-        this.env.powerups.forEach( (obj) => {
+        this.env.collectables.forEach( (obj) => {
           obj.draw(context);
         })
     }

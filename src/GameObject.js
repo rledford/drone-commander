@@ -12,6 +12,10 @@ export class GameObject {
         this.visible = true;
         this.alive = true;
         this.color = '#fff';
+        this.drawStroke = true;
+        this.drawFill = true;
+        this.drawClosed = true;
+        this.lineWidth = 2;
     }
 
     set (args) {
@@ -22,11 +26,10 @@ export class GameObject {
 
     update (dt) {
         //dt should be the time passed in seconds
-
     }
 
     draw (ctx) {
-        ///ctx is context
+        ///ctx is a canvas' 2d context
         if (!this.visible) return;
         if (this.shape.points.length >= 2){
             let point = this.shape.points[0],
@@ -34,7 +37,7 @@ export class GameObject {
                 y = this.position.y + point.y;
             ctx.fillStyle = this.color;
             ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = this.lineWidth;
             ctx.beginPath();
             ctx.moveTo(x, y);
             for (let i = 1; i < this.shape.points.length; i++){
@@ -43,9 +46,15 @@ export class GameObject {
                 y = this.position.y + point.y;
                 ctx.lineTo(x, y);
             }
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            if (this.drawClosed) {
+              ctx.closePath();
+            }
+            if (this.drawFill){
+              ctx.fill();
+            }
+            if (this.drawStroke){
+              ctx.stroke();
+            }
         }
         else if (this.shape.points.length === 1){
             ctx.strokeStyle = this.color;

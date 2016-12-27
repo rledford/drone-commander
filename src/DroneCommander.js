@@ -8,6 +8,7 @@ import { ShapeHelper } from './ShapeHelper';
 import { GameWorld } from './GameWorld';
 import { GameObject } from './GameObject';
 import * as EnemySpawn from './EnemySpawn';
+import * as Collectable from './Collectable';
 export class DroneCommander extends Component{
 
     constructor(props){
@@ -50,11 +51,16 @@ export class DroneCommander extends Component{
         });
         this.spawn.startSpawn(10);
         for (let i = 0; i < 10; i++){
+          let obj = new Collectable.CollectableShield();
+          obj.position.set(new Point((i+1)*24,24));
+          this.world.env.collectables.push(obj);
+          /*
           let obj = new GameObject();
           obj.shape = Shape.Rectangle(20,20);
           obj.color = '#b928c2';
           obj.position = new Point(i*20,20);
           this.world.env.powerups.push(obj);
+          */
         }
         let ship = [
             new Point(0,0),
@@ -86,15 +92,16 @@ export class DroneCommander extends Component{
                 if (enemy.position.y > this.state.screen.height + enemy.shape.range){
                     console.log('enemy off screen');
                     enemy.alive = false;
+                    return;
                 }
                 if (this.checkIntersect(player, enemy)){
-                    enemy.alive = false;
-                    player.alive = false;
+                    enemy.takeDamage();
+                    player.takeDamage();
                 }
             });
             this.world.enemy.bullets.forEach( (bullet) => {
                 if (this.checkIntersect(player, bullet)){
-                    player.alive = false;
+                    player.takeDamage();
                     bullet.alive = false;
                 }
             });
@@ -102,16 +109,22 @@ export class DroneCommander extends Component{
         this.world.player.bullets.forEach( (bullet) => {
             this.world.enemy.drones.forEach( (enemy) => {
                 if (this.checkIntersect(bullet, enemy)){
-                    enemy.alive = false;
+                    enemy.takeDamage();
                     bullet.alive = false;
                 }
             });
-            this.world.env.powerups.forEach( (up) => {
-                if (this.checkIntersect(bullet, up)){
+            this.world.env.collectables.forEach( (collectable) => {
+                if (this.checkIntersect(bullet, collectable)){
                   bullet.alive = false;
-                  up.alive = false;
-                  this.player.applyPowerup();
-                  console.log('powerup');
+                  collectable.alive = false;
+                  if (collectable.type === Collectable.Collectable.TYPE.POWERUP){
+                    this.player.applyPowerup();
+                    console.log('powerup');
+                  }
+                  else if (collectable.type === Collectable.Collectable.TYPE.SHIELD){
+                    this.player.applyShield();
+                    console.log('shield');
+                  }
                 }
             });
         });

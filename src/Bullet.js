@@ -23,4 +23,14 @@ export class Bullet extends GameObject {
     draw (ctx) {
         super.draw(ctx);
     }
+
+    clone () {
+      let bullet = new Bullet();
+      bullet.position.set(this.position);
+      bullet.color = this.color;
+      bullet.speed = this.speed;
+      bullet.velocity.set(this.velocity);
+      bullet.shape = this.shape.clone();
+      return bullet;
+    }
 }

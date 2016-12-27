@@ -29,6 +29,10 @@ export class Drone extends GameObject {
         });
     }
 
+    takeDamage () {
+      this.alive = false;
+    }
+
     update (dt) {
         //dt is delta time since last frame
         this.move(dt);
